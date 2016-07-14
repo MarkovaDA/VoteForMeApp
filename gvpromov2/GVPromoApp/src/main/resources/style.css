@@ -1,0 +1,38 @@
+.label, .hyperlink{
+    -fx-font-size: 16px;
+    -fx-text-fill: #242d35;
+}
+#infoLabel{
+    -fx-text-fill: #ff526c;
+    -fx-background-color: #ffe4e1;
+    -fx-padding: 3px;
+    -fx-border-width: 1;
+    -fx-border-color: #ff526c;
+    -fx-border-radius: 3px; 
+}
+#messageStatusLabel{
+    -fx-background-color: #a8d8ff;
+    -fx-border-color: #242d35;
+    -fx-padding: 3px;
+    -fx-border-radius: 3px; 
+}
+.button {
+    -fx-background-color: 
+        rgba(0,0,0,0.08),
+        linear-gradient(#9a9a9a, #909090),
+        linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%);
+    -fx-background-insets: 0 0 -1 0,0,1;
+    -fx-background-radius: 5,5,4;
+    -fx-padding: 3 10 3 10;
+    -fx-text-fill: #242d35;
+    -fx-font-size: 14px;
+}
+.button:hover{
+     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+}
+.hyperlink{
+    -fx-underline: true;
+}
+.combo-box {
+    -fx-font-size: 14px;
+}

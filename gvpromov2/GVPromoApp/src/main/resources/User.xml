@@ -1,0 +1,16 @@
+ <!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="User">
+    <resultMap id="result" type="User">
+        <result property="uid" column="uid"/>
+        <result property="first_name" column="first_name"/>
+        <result property="last_name"  column="last_name"/>
+        <result property="photo_400_orig"  column="photo_400_orig"/> 
+    </resultMap>
+
+    <insert id="insert" parameterType="User">
+        INSERT INTO users(uid, first_name, last_name, photo_400_orig) VALUES (#{uid}, #{first_name}, #{last_name}, #{photo_400_orig});
+    </insert>
+</mapper>

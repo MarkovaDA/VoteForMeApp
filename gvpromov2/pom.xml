@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>su.vistar</groupId>
+    <artifactId>GVPromo</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>GVPromoApp</module>
+        <module>GVPromoWebApp</module>
+        <module>Commons</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <slf4j.version>1.7.7</slf4j.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
+        <spring.security.version>3.2.5.RELEASE</spring.security.version>
+        <spring.boot.version>1.1.8.RELEASE</spring.boot.version>
+        <hibernate.version>4.3.6.Final</hibernate.version>
+        <hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
+        <joda.version>2.4</joda.version>
+        <javax.mail.version>1.4.7</javax.mail.version>
+        <jackson.version>1.9.13</jackson.version>
+        <jackson.fasterxml.version>2.4.3</jackson.fasterxml.version>
+        <guava.version>18.0</guava.version>
+        <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+    </dependencies>
+    
+</project>

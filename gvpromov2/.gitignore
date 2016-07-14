@@ -1,0 +1,12 @@
+
+/GVPromoApp — копия/target/
+.idea
+out
+*.iml
+GVPromoApp/nbactions.xml
+GVPromoApp/target
+GVPromoWebApp/target
+Commons/target
+login.data
+
+
