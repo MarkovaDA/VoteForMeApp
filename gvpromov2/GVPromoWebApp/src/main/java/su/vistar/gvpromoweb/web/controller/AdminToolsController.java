@@ -39,11 +39,16 @@ public class AdminToolsController {
     {       
         return "redirect:" + oauthVkUrl;  
     }
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String alsohome() 
+    {       
+        return "redirect:" + oauthVkUrl;  
+    }
+    
     //url для аутентификации
     private String oauthVkUrl = "https://oauth.vk.com/" +
             "authorize?" +
             "client_id=5546142" +
-            "&revoke=1"+
             "&redirect_uri=http://localhost:8084/GVPromoWebApp/admin_tools/login"+
             "&response_type=code";
     
@@ -58,11 +63,14 @@ public class AdminToolsController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView showLoginPage(@RequestParam("code")String code) throws Exception {      
         Response loginData = null;
-        UserEntity currentUser = null;
+        UserEntity currentUser = null;        
         ModelAndView model = new ModelAndView("main");        
         String response = doRequest(accessTokenUrl + code);     
         loginData = mapper.fromJson(response, Response.class);
-        currentUser = userService.get(loginData.getUser_id());
+        if (loginData == null && code.length() > 0){
+            return new ModelAndView("redirect:");
+        }
+        currentUser = userService.get(loginData.getUser_id());                     
         String roleName = (currentUser != null) ? currentUser.getRole().getName() : "";       
         if (currentUser == null  ||  !"ADMIN".equals(currentUser.getRole().getName())){
            return new ModelAndView("access_denied");
@@ -95,7 +103,7 @@ public class AdminToolsController {
         }
     }
 
-    @RequestMapping(value = "/loginfailed", method = RequestMethod.GET)
+    @RequestMapping(value = "/loginfailed", method = RequestMethod.GET) 
     public String loginfailed(ModelMap model) {
         return "login";
     }

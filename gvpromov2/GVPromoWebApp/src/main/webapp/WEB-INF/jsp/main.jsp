@@ -30,6 +30,13 @@
         body{
             font-size: 16px;
         }
+        a{
+            text-decoration: none;
+            color: #333333;
+        }
+        a:hover{
+            color: darkblue;
+        }
     </style>
 </head>
 
@@ -49,8 +56,14 @@
                 <ul class="demo-list-item mdl-list">
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
-                      <i class="material-icons mdl-list__item-avatar">people</i>
-                      Кандидаты
+                      <i class="material-icons mdl-list__item-avatar">add</i>
+                      <a href="">Добавить кандидата</a>
+                    </span>
+                  </li>
+                  <li class="mdl-list__item">
+                    <span class="mdl-list__item-primary-content">
+                      <i class="material-icons mdl-list__item-avatar">remove</i>                      
+                      <a href="delete_candidates">Удалить кандидата</a>
                     </span>
                   </li>
                  </ul>
