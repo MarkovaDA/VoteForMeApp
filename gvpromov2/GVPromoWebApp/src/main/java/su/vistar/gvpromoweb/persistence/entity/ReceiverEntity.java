@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 
 
@@ -28,7 +29,18 @@ public class ReceiverEntity implements Serializable{
     
     @Column(name = "last_name")
     private String last_name;
+    
+    @Transient
+    private Integer city;
 
+    public Integer getCity() {
+        return city;
+    }
+
+    public void setCity(Integer city) {
+        this.city = city;
+    }
+    
     public String getFirst_name() {
         return first_name;
     }

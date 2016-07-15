@@ -5,6 +5,9 @@ import su.vistar.gvpromoweb.persistence.entity.security.SystemRoleEntity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -12,7 +15,8 @@ import java.util.Date;
 public class UserEntity implements Serializable {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
     @Column(name = "vk_id")
@@ -39,7 +43,7 @@ public class UserEntity implements Serializable {
                     @JoinColumn(name = "role_id", nullable = false, updatable = false)}
     )
     private SystemRoleEntity role;
-
+        
     public Integer getId() {
         return id;
     }

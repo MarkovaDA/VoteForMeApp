@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
@@ -27,8 +26,18 @@ public class CandidateEntity implements Serializable{
     
     @Column(name = "name")
     private String name;
-     
-      
+    
+    @Column(name="vk_id")
+    private String vkId;
+
+    public String getVkId() {
+        return vkId;
+    }
+
+    public void setVkId(String vkId) {
+        this.vkId = vkId;
+    }
+    
     public Integer getAppUserId() {
         return appUserId;
     }

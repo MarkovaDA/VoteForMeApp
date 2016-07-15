@@ -14,13 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import su.vistar.gvpromoweb.web.utils.ControllerUtils;
-
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import su.vistar.gvpromoweb.persistence.entity.CandidateEntity;
 import su.vistar.gvpromoweb.persistence.entity.ReceiverEntity;
 import su.vistar.gvpromoweb.persistence.entity.UserEntity;
+import su.vistar.gvpromoweb.service.CandidateService;
 import su.vistar.gvpromoweb.service.UserService;
 
 @Controller
@@ -28,7 +29,7 @@ import su.vistar.gvpromoweb.service.UserService;
 public class AdminToolsController {
 
     @Autowired
-    private ControllerUtils controllerUtils;
+    private CandidateService candidateService;
     
     @Autowired
     private UserService userService;
@@ -37,7 +38,6 @@ public class AdminToolsController {
     public String home() 
     {       
         return "redirect:" + oauthVkUrl;  
-        //return "main";
     }
     //url для аутентификации
     private String oauthVkUrl = "https://oauth.vk.com/" +
@@ -54,6 +54,7 @@ public class AdminToolsController {
             "&code=";
     private  Gson mapper = new Gson();
     
+    private String accessToken;
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView showLoginPage(@RequestParam("code")String code) throws Exception {      
         Response loginData = null;
@@ -62,17 +63,36 @@ public class AdminToolsController {
         String response = doRequest(accessTokenUrl + code);     
         loginData = mapper.fromJson(response, Response.class);
         currentUser = userService.get(loginData.getUser_id());
-        String roleName = currentUser.getRole().getName();
-        
+        String roleName = (currentUser != null) ? currentUser.getRole().getName() : "";       
         if (currentUser == null  ||  !"ADMIN".equals(currentUser.getRole().getName())){
-           return new ModelAndView("loginfailed");
+           return new ModelAndView("access_denied");
         } 
-        else {
-            model.addObject("adminUser", getFirstName(loginData.getUser_id())); //информация о юзере
-            model.addObject("friends",getFriends(loginData.getUser_id())); //информация о друзьях
+        else 
+        {   
+            accessToken = loginData.getAccess_token();
+            model.addObject("adminUser", getInfo(loginData.getUser_id())); //информация о юзере
+            model.addObject("friends",   getFriends(loginData.getUser_id())); //информация о друзьях
         }
         
         return model;
+    }
+    @RequestMapping(value = "/store_candidates", method = RequestMethod.POST)
+    public void addCandidates(@RequestBody ReceiverEntity[] candidates) throws IOException
+    {   
+        CandidateEntity candidate; 
+
+         
+        for(ReceiverEntity item: candidates){
+            if (item.getCity() == -1){
+                item = getInfo(item.getUid());
+            }
+            candidate = new CandidateEntity();
+            candidate.setAppUserId(1);
+            candidate.setCityId(item.getCity()); //getByunction
+            candidate.setVkId(item.getUid());
+            candidate.setName(item.getFirst_name() + " " + item.getLast_name());
+            candidateService.saveOrUpdate(candidate);
+        }
     }
 
     @RequestMapping(value = "/loginfailed", method = RequestMethod.GET)
@@ -140,20 +160,29 @@ public class AdminToolsController {
         return "";
     }
     //получаем имя пользователя по вк_id
-    private ReceiverEntity getFirstName(String vkId) throws ProtocolException, IOException 
+    private ReceiverEntity getInfo(String vkId) throws ProtocolException, IOException 
     {   
-        String url = "https://api.vk.com/method/users.get?user_ids=" + vkId;
+        String url = "https://api.vk.com/method/users.get?fields=first_name,last_name,city&user_ids=" + vkId + "&access_token=" + accessToken;
         String res = doRequest(url);       
         res = res.substring(res.indexOf(":") + 1, res.lastIndexOf("]}")) + "]"; 
         ReceiverEntity[] receivers = mapper.fromJson(res, ReceiverEntity[].class);
         return receivers[0];
     }
+    
     private ReceiverEntity[] getFriends(String vkId) throws ProtocolException, IOException
     {   
-        String url = "https://api.vk.com/method/friends.get?fields=first_name,last_name&user_id=" + vkId;
+        String url = "https://api.vk.com/method/friends.get?fields=first_name,last_name,city&user_id=" + vkId + "&access_token=" + accessToken;
         String res = doRequest(url);       
         res = res.substring(res.indexOf(":") + 1, res.lastIndexOf("]}")) + "]"; 
         ReceiverEntity[] receivers = mapper.fromJson(res, ReceiverEntity[].class);
+
+        for(ReceiverEntity item: receivers){
+            if (candidateService.getCandidateByVkId(item.getUid())!= null){
+                item.setStatus(false);
+            }
+            else item.setStatus(true);
+            
+        }
         return receivers;
     }
     

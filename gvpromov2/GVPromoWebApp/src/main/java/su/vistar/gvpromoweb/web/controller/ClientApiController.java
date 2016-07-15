@@ -22,7 +22,6 @@ import su.vistar.gvpromoweb.service.CandidateService;
 import su.vistar.gvpromoweb.service.FilterService;
 import su.vistar.gvpromoweb.service.HistoryService;
 import su.vistar.gvpromoweb.service.MessageService;
-import su.vistar.gvpromoweb.service.PropertyService;
 import su.vistar.gvpromoweb.service.ReceiverService;
 import su.vistar.gvpromoweb.service.UserService;
 import su.vistar.gvpromoweb.service.CandidateUsersService;
@@ -37,17 +36,13 @@ import su.vistar.gvpromoweb.web.utils.ControllerUtils;
 @RequestMapping("/api")
 public class ClientApiController {
    
-    @Autowired
-    private UserService userService;    
+
     
     @Autowired
     private MessageService messageService;    
     
     @Autowired
     private ReceiverService receiverService;  
-    
-    @Autowired
-    private ControllerUtils controllerUtils;  
     
     @Autowired
     private HistoryService historyService;

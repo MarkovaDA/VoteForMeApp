@@ -24,8 +24,18 @@ public class CandidateService {
     }
     
     @Transactional
+    public CandidateEntity getCandidateByVkId(String vkId){
+        return candidateDao.getCandidateByVkId(vkId);
+    }
+    
+    @Transactional
     public List<CandidateEntity> getAllCandidates(){
         return candidateDao.getCandidates();
+    }
+    
+    @Transactional
+    public void saveOrUpdate(CandidateEntity entity){
+        candidateDao.save(entity);    
     }
     
 }

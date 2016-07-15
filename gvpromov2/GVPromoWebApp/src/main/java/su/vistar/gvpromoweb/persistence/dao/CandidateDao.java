@@ -11,9 +11,7 @@ import su.vistar.gvpromoweb.persistence.entity.CandidateEntity;
 @Repository(value = "candidateDao")
 public class CandidateDao extends AbstractDao {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    /*получаем текущего (активного) кандидата*/
+ 
     public CandidateEntity getActive() {
         return  (CandidateEntity)sessionFactory.getCurrentSession()
                 .createCriteria(CandidateEntity.class)
@@ -26,6 +24,13 @@ public class CandidateDao extends AbstractDao {
          return  (CandidateEntity)sessionFactory.getCurrentSession()
                 .createCriteria(CandidateEntity.class)
                 .add(Restrictions.eq("id", id))
+                .uniqueResult();
+    }
+    
+    public CandidateEntity getCandidateByVkId(String vkId){
+         return  (CandidateEntity)sessionFactory.getCurrentSession()
+                .createCriteria(CandidateEntity.class)
+                .add(Restrictions.eq("vkId", vkId))
                 .uniqueResult();
     }
     
