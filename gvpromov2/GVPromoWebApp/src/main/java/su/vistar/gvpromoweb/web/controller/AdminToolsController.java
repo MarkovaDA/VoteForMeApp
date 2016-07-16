@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -102,6 +104,11 @@ public class AdminToolsController {
             candidateService.saveOrUpdate(candidate);
         }
     }
+    @RequestMapping(value = "/delete_candidate", method = RequestMethod.POST)
+    public void deleteCandidate(@RequestBody CandidateEntity candidate)
+    {
+        candidateService.delete(candidate);
+    }
 
     @RequestMapping(value = "/loginfailed", method = RequestMethod.GET) 
     public String loginfailed(ModelMap model) {
@@ -149,6 +156,20 @@ public class AdminToolsController {
         
     }
 
+    @RequestMapping(value = "/candidates", method = RequestMethod.GET)
+    public ModelAndView getCandidates()
+    {
+        if (accessToken == null)
+            //return new ModelAndView("access_denied");
+          return new ModelAndView("redirect:/admin_tools");
+        ModelAndView model = new ModelAndView("candidates");
+        List<CandidateEntity> candidates = candidateService.getAllCandidates();
+        
+        model.addObject("candidates", candidateService.getAllCandidates());        
+        return model;
+    }
+    
+    
     private String doRequest(String url) throws MalformedURLException, ProtocolException, IOException
     {
         URL obj = new URL(url);

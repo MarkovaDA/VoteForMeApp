@@ -11,33 +11,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
-    
+    <link href="<c:url value="/res/css/custom_style.css"/>" rel="stylesheet">
     <title>Панель администратора</title>
-    <style>
-        .mdl-list__item:hover{
-            background: lavender;
-        }
-        #uid_text{
-            border: 1px solid lavender;
-            border-radius: 3px;
-            padding: 7px;
-        }
-        .mdl-list__item-avatar{
-            width: 30px !important;
-            height: 30px!important;
-            font-size: 30px !important;
-        }
-        body{
-            font-size: 16px;
-        }
-        a{
-            text-decoration: none;
-            color: #333333;
-        }
-        a:hover{
-            color: darkblue;
-        }
-    </style>
 </head>
 
 <body>
@@ -63,7 +38,7 @@
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                       <i class="material-icons mdl-list__item-avatar">remove</i>                      
-                      <a href="delete_candidates">Удалить кандидата</a>
+                      <a href="candidates">Удалить кандидата</a>
                     </span>
                   </li>
                  </ul>
@@ -79,7 +54,13 @@
                     Добавить
                 </button>
                 
-                <p style="text-align: center">Выбрать кандидата среди друзей:</p>
+                <p class="header_text">Выбрать кандидата среди друзей:</p>
+                
+                <div class="mdl-textfield mdl-js-textfield" style="width:100% !important;">
+                    <input style="width:100%;" class="mdl-textfield__input" type="text" id="search" placeholder="search">
+                    <label class="mdl-textfield__label" for="search"></label>
+                </div>
+                
                 <c:if test="${not empty friends}">
 
                     <ul class="demo-list-control mdl-list" id="friends_list">
@@ -106,6 +87,7 @@
                             
                     </ul>
                  </c:if>
+                
                  <button class="mdl-button mdl-js-button mdl-button--raised">
                     Добавить
                  </button>
@@ -119,6 +101,17 @@
 <script>
     $(document).ready(function()
     {            
+        //обособить в отдельную функцию скрипта с передачей параметра сортировки
+        $('#search').keyup(function(){
+            var pattern = $(this).val();
+            
+            $('#friends_list li').each(function(index, value){
+                var name = $(this).find('.first_name').eq(0).html() + $(this).find('.last_name').eq(0).html();
+                if (name.indexOf(pattern) !== 0)
+                    $(this).hide();
+                else $(this).show();
+            });
+        });
         $('input[type="checkbox"]').change(function() {
             if ($(this).prop("checked")) 
             {   

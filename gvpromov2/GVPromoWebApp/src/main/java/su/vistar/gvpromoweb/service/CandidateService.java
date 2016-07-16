@@ -37,5 +37,9 @@ public class CandidateService {
     public void saveOrUpdate(CandidateEntity entity){
         candidateDao.save(entity);    
     }
+    @Transactional
+    public void delete(CandidateEntity entity){
+        candidateDao.delete(entity);
+    }
     
 }

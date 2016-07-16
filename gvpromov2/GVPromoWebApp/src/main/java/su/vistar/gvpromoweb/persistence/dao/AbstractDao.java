@@ -17,4 +17,8 @@ public class AbstractDao {
     public <T> void save(T entity) {
         sessionFactory.getCurrentSession().saveOrUpdate(entity);
     }
+    public <T> void delete(T entity){
+        sessionFactory.getCurrentSession().delete(entity);
+        
+    }
 }

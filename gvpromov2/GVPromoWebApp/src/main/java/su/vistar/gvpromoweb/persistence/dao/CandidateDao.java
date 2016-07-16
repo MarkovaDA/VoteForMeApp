@@ -3,8 +3,6 @@ package su.vistar.gvpromoweb.persistence.dao;
 
 import java.util.List;
 import org.hibernate.criterion.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import su.vistar.gvpromoweb.persistence.entity.CandidateEntity;
 
