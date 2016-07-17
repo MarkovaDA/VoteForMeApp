@@ -2,14 +2,12 @@ package su.vistar.gvpromo;
 
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import su.vistar.gvpromo.commons.dto.ResponseDTO;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import su.vistar.gvpromo.commons.dto.CandidateDTO;
@@ -25,8 +23,8 @@ public class ClientAPI {
 
     private static Gson mapper = new Gson();
    
-    public static MessageDTO[] getMessages(Integer appUserId) throws Exception{
-        ResponseDTO response = request("/get/messages?app_user_id=", appUserId.toString());           
+    public static MessageDTO[] getMessages(Integer candidateId) throws Exception{
+        ResponseDTO response = request("/get/messages?candidate_id=", candidateId.toString());           
         String responseToString = response.getObject().toString();
         return mapper.fromJson(responseToString, MessageDTO[].class);      
     }
@@ -72,8 +70,7 @@ public class ClientAPI {
     public static CandidateDTO getCandidate(String vkUserId) throws Exception
     {
         ResponseDTO response = request("/get_candidate", "?vkuser_id=" + vkUserId);
-        if (response.getObject() == null) return null;
-        String objectJson = response.getObject().toString();     
+        if (response.getObject() == null) return null;     
         return (CandidateDTO)mapper.fromJson((String)response.getObject(), CandidateDTO.class);
     }
     
@@ -82,7 +79,7 @@ public class ClientAPI {
         String newUrl = apiUrl+params;
         return request(newUrl);
     }
-    
+    //http://localhost:8084/GVPromoWebApp/api/get_candidate?vkuser_id=262591631
     private static ResponseDTO request(String apiUrl) throws Exception {
         
         URL obj = new URL(BASE_URL+apiUrl);

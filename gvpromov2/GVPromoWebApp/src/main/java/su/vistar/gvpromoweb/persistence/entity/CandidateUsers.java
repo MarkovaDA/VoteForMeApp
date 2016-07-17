@@ -3,9 +3,12 @@ package su.vistar.gvpromoweb.persistence.entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,11 +21,12 @@ public class CandidateUsers implements Serializable{
     private Integer id;
     
     @Column(name = "candidate_id", insertable = false, updatable=false)
-    private Integer candidateId;
+    private Integer candidateId; 
     
     @Column(name = "vkuser_id")
     private String vkUserId;  
-      
+    
+           
     public void setId(Integer id) {
         this.id = id;
     }

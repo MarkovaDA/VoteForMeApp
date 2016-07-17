@@ -12,13 +12,13 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
     <link href="<c:url value="/res/css/custom_style.css"/>" rel="stylesheet">
-    <title>Панель администратора</title>
+    <title>Личный кабинет кандидата</title>
 </head>
 
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     
-  <jsp:include page="include/header.jsp"/>
+  <jsp:include page="include/header_candidate.jsp"/>
 
   <main class="mdl-layout__content">
       <div class="page-content demo-card-square mdl-shadow--2dp">
@@ -31,14 +31,20 @@
                 <ul class="demo-list-item mdl-list">
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
-                      <i class="material-icons mdl-list__item-avatar">add</i>
-                      <a href="">Добавить кандидата</a>
+                      <i class="material-icons mdl-list__item-avatar">view_list</i>
+                      <a href="">Мои сообщения</a>
+                    </span>
+                  </li>
+                  <li class="mdl-list__item">
+                    <span class="mdl-list__item-primary-content">
+                      <i class="material-icons mdl-list__item-avatar">add</i>                      
+                      <a>Добавить отправителя</a>
                     </span>
                   </li>
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                       <i class="material-icons mdl-list__item-avatar">remove</i>                      
-                      <a href="candidates">Удалить кандидата</a>
+                      <a>Удалить отправителя</a>
                     </span>
                   </li>
                  </ul>
@@ -46,48 +52,11 @@
             
             <!--2 колонка-->    
             <div class="mdl-cell mdl-cell--10-col mdl-cell--3-col-phone mdl-cell--1-col-phone">
-                <div class="mdl-textfield mdl-js-textfield" style="width:100% !important;">
-                    <input style="width:100%;" class="mdl-textfield__input" type="text" id="uid_text" placeholder="vk uid">
-                    <label class="mdl-textfield__label" for="uid_text"></label>
-                </div>
-                <button class="mdl-button mdl-js-button mdl-button--raised" id="btn_add">
+                
+                 <jsp:include page="include/friends_list.jsp"/>
+                 <button class="mdl-button mdl-js-button mdl-button--raised">
                     Добавить
-                </button>
-                
-                <p class="header_text">Выберите среди друзей:</p>
-                
-                <div class="mdl-textfield mdl-js-textfield" style="width:100% !important;">
-                    <input style="width:100%;" class="mdl-textfield__input" type="text" id="search" placeholder="search">
-                    <label class="mdl-textfield__label" for="search"></label>
-                </div>
-                
-                <c:if test="${not empty friends}">
-
-                    <ul class="demo-list-control mdl-list" id="friends_list">
-			<c:forEach var="friend" items="${friends}">
-                            <c:if test="${friend.status != false}">
-                            
-                            <li class="mdl-list__item">
-                                <input type="hidden" value="${friend.uid}" class="uid"/>
-                                <input type="hidden" value="${friend.city}" class="city"/>
-                                <span class="mdl-list__item-primary-content">
-                                    <i class="material-icons  mdl-list__item-avatar">person</i>
-                                    <span class="first_name">${friend.first_name}</span> 
-                                    <span style="margin-left: 10px;" class="last_name"> ${friend.last_name}</span>
-                                </span>
-                                <span class="mdl-list__item-secondary-action">
-                                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-${friend.last_name}">
-                                    <input type="checkbox" id="list-checkbox-${friend.last_name}" class="mdl-checkbox__input"/>
-                                    </label>
-                                </span>
-                            </li>
-                            
-                            </c:if>
-			</c:forEach>
-                            
-                    </ul>
-                 </c:if>
-                
+                 </button>
             </div>
             </div>
       </div>
@@ -97,7 +66,7 @@
 <script src="<c:url value="/res/js/jquery.js"/>"></script>
 <script src="<c:url value="/res/js/add_from_friends.js"/>"></script>
 <script>
-    $(document).ready(function()
+     $(document).ready(function()
     {            
         //обособить в отдельную функцию скрипта с передачей параметра сортировки
         $('#search').keyup(function(){
@@ -110,9 +79,10 @@
                 else $(this).show();
             });
         });  
-        addFromFriends("store_candidates", false);
+        addFromFriends("store_sendors", true);
     });
 </script>
 </body>
 
 </html>
+

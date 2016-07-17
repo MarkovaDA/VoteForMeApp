@@ -28,8 +28,9 @@ public class CandidateDao extends AbstractDao {
     public CandidateEntity getCandidateByVkId(String vkId){
          return  (CandidateEntity)sessionFactory.getCurrentSession()
                 .createCriteria(CandidateEntity.class)
-                .add(Restrictions.eq("vkId", vkId))
-                .uniqueResult();
+                
+                 .add(Restrictions.eq("vkId", vkId)).
+                 uniqueResult();
     }
     
     /*список всех кандидатов*/

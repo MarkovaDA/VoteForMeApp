@@ -1,4 +1,4 @@
-.mdl-list__item:hover{
+    .mdl-list__item:hover{
           background: lavender;
       }
       #uid_text{
@@ -24,5 +24,11 @@
       .header_text{
           text-align: center;
           font-size: 1.2em;
-          color:darkblue;
-}
+          color:darkblue;        
+    }
+    .mdl-textfield__input{
+        border: 1px solid lavender;
+        text-align: left;
+        padding: 5px;
+        width: 100%;
+    }

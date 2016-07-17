@@ -17,7 +17,6 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +24,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.util.Duration;
@@ -126,7 +122,8 @@ public class MainController implements Initializable {
             oauth();           
         }
         //пользователь уже авторизован
-        else  prepareData();
+        else  
+            prepareData();
         sendBtn.setOnAction(event -> sendMessage());
         messageUpdateBtn.setOnAction(event -> updateMessage());
         nextUserIdBtn.setOnAction(event -> nextUser());

@@ -1,11 +1,16 @@
 package su.vistar.gvpromoweb.persistence.entity;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 
 
@@ -29,7 +34,20 @@ public class CandidateEntity implements Serializable{
     
     @Column(name="vk_id")
     private String vkId;
+    
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "candidate")
+    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+    private List<MessageEntity> messages; //соответствующие кандидату сообщения
 
+    public List<MessageEntity> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<MessageEntity> messages) {
+        this.messages = messages;
+    }
+   
     public String getVkId() {
         return vkId;
     }

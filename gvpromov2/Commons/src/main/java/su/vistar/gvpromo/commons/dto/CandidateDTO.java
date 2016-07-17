@@ -7,6 +7,15 @@ public class CandidateDTO {
     private Integer cityId;
     private String name;
     private Boolean active;
+    private String vkId;
+
+    public String getVkId() {
+        return vkId;
+    }
+
+    public void setVkId(String vkId) {
+        this.vkId = vkId;
+    }
 
     public CandidateDTO()
     {

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import su.vistar.gvpromoweb.persistence.dao.CandidateDao;
 import su.vistar.gvpromoweb.persistence.entity.CandidateEntity;
 
+
 @Service("candidateService")
 public class CandidateService {
     @Autowired
@@ -27,6 +28,7 @@ public class CandidateService {
     public CandidateEntity getCandidateByVkId(String vkId){
         return candidateDao.getCandidateByVkId(vkId);
     }
+   
     
     @Transactional
     public List<CandidateEntity> getAllCandidates(){

@@ -3,7 +3,10 @@ package su.vistar.gvpromoweb.persistence.entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,16 +19,30 @@ public class MessageEntity implements Serializable{
     @Column(name = "message_text", columnDefinition="TEXT")
     private String messageText; 
     
-    @Column(name = "appuser_id")
-    private Integer appUserId;
+    //@Column(name = "appuser_id", insertable=false, updatable=false)
+    //private Integer appUserId; //на самом деле привязка к id в таблице candidates
+    
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "candidate_id")
+    private CandidateEntity candidate; //кандидат, автор данного сообщения
 
-    public Integer getAppUserId() {
+   
+    public CandidateEntity getCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(CandidateEntity candidate) {
+        this.candidate = candidate;
+    }
+
+    /*public Integer getAppUserId() {
         return appUserId;
     }
 
     public void setAppUserId(Integer appUserId) {
         this.appUserId = appUserId;
-    }
+    }*/
 
     public Integer getMessageId() {
         return messageId;

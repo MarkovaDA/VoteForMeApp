@@ -44,7 +44,7 @@
                         <div class="mdl-card__title mdl-card--expand">
                         </div>
                         <div class="mdl-card__supporting-text">
-                              Вы не являетесь администратором данного сервиса
+                              ${error_header_message}
                         </div>
                         <div class="mdl-card__actions mdl-card--border" style="text-align: center;">
                         <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">

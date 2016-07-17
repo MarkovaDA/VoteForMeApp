@@ -2,6 +2,7 @@ package su.vistar.gvpromoweb.web.controller;
 
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import su.vistar.gvpromoweb.persistence.entity.FilterEntity;
 import su.vistar.gvpromoweb.persistence.entity.HistoryEntity;
 import su.vistar.gvpromoweb.persistence.entity.ReceiverEntity;
 import su.vistar.gvpromoweb.persistence.entity.CandidateUsers;
+import su.vistar.gvpromoweb.persistence.entity.MessageEntity;
 
 import su.vistar.gvpromoweb.service.CandidateService;
 import su.vistar.gvpromoweb.service.FilterService;
@@ -59,16 +61,18 @@ public class ClientApiController {
     private  Gson mapper = new Gson();
       
 
-    
-    
-    
-
     @RequestMapping(value="/get/messages", method=RequestMethod.GET)
     @ResponseBody
-    public ResponseDTO getMessages(@RequestParam("app_user_id")Integer appUserId){
+    public ResponseDTO getMessages(@RequestParam("candidate_id")Integer candidateId){
        
         ResponseDTO result = new ResponseDTO();
-        result.setObject(mapper.toJson(messageService.listMessages(appUserId)));
+        CandidateEntity candidate = candidateService.getCandidateById(candidateId);
+        List<MessageEntity> messages = candidate.getMessages();
+        for(MessageEntity message: messages){
+            message.setCandidate(null);           
+        }
+        String messagesJson = mapper.toJson(messages);         
+        result.setObject(mapper.toJson(candidate.getMessages()));     
         return result; 
     }
     
@@ -137,7 +141,6 @@ public class ClientApiController {
             entity.setVkUserId(vkuser_id);
         }
         historyService.saveOrUpdate(entity);
-        //чистый костыль - ничего не нужно возвращать
         ResponseDTO result = new ResponseDTO();
         result.setObject(true);
         return result;
@@ -147,18 +150,17 @@ public class ClientApiController {
     @ResponseBody
     public ResponseDTO getCandidateForVkUser(@RequestParam("vkuser_id")String vkuserId){
         
-        ResponseDTO response = new ResponseDTO();       
-        CandidateUsers entity = candidateUsersService.getCandidateForVkUser(vkuserId);        
+        //получаем кандидата, к которому приписан юзер с вк id, равным vkuser_id
+        ResponseDTO response = new ResponseDTO(); 
         
+        CandidateUsers entity = candidateUsersService.getCandidateForVkUser(vkuserId);        
         if (entity == null){
             response.setObject(null);
             return response;
         }        
-        CandidateEntity candidate = candidateService.getCandidateById(entity.getId()); 
-        String str = mapper.toJson(candidate);
-        response.setObject(mapper.toJson(candidate));        
+        CandidateEntity candidate = candidateService.getCandidateById(entity.getCandidateId()); 
+        candidate.setMessages(null);       
+        response.setObject(mapper.toJson(candidate));  
         return response;
-    }
-
-    
+    }   
 }
