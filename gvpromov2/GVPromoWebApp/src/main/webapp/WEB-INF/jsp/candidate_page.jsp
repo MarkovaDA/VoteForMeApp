@@ -38,13 +38,13 @@
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                       <i class="material-icons mdl-list__item-avatar">add</i>                      
-                      <a href="add_sendors?candidate_id=${candidateUser.id}">Добавить отправителя</a>
+                      <a href="add_sendors?candidate_id=${candidateUser.id}">Добавить пользователя</a>
                     </span>
                   </li>
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                       <i class="material-icons mdl-list__item-avatar">remove</i>                      
-                      <a>Удалить отправителя</a>
+                      <a href="sendors?candidate_id=${candidateUser.id}">Удалить пользователя</a>
                     </span>
                   </li>
                  </ul>
@@ -52,7 +52,7 @@
             
             <!--2 колонка-->    
             <div class="mdl-cell mdl-cell--10-col mdl-cell--3-col-phone mdl-cell--1-col-phone"> 
-                <p>Мои сообщения</p>
+                <p class="header_text">Мои сообщения</p>
                 <c:if test="${not empty messages}">
                     <c:forEach var="message" items="${messages}">
                         <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">

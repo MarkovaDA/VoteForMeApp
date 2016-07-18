@@ -28,6 +28,11 @@ public class ClientAPI {
         String responseToString = response.getObject().toString();
         return mapper.fromJson(responseToString, MessageDTO[].class);      
     }
+    public static MessageDTO[] getDefaultMessages() throws Exception{
+        ResponseDTO response = request("/get_default_messages");           
+        String responseToString = response.getObject().toString();
+        return mapper.fromJson(responseToString, MessageDTO[].class);
+    }
     
     /*получаем кол-во позволенных запросов для текущего пользователя
     * на сегодняшний день(максимум 20 запросов)

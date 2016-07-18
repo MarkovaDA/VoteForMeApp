@@ -4,16 +4,23 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
+ <button class="mdl-button mdl-js-button mdl-button--raised">
+        Добавить
+ </button>
 
 <p class="header_text">Выберите среди друзей:</p>
 
-<div class="mdl-textfield mdl-js-textfield" style="width:100% !important;">
-    <input style="width:100%;" class="mdl-textfield__input" type="text" id="search" placeholder="search">
+<!-- поле поиска-->
+<div class="mdl-textfield">
+    <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
+      <i class="material-icons">search</i>
+    </label>
+    <input style="width:100% !important; margin-left: 30px;" class="mdl-textfield__input" type="text" id="search" placeholder="search">
     <label class="mdl-textfield__label" for="search"></label>
 </div>
 
+ 
 <c:if test="${not empty friends}">
-
     <ul class="demo-list-control mdl-list" id="friends_list">
         <c:forEach var="friend" items="${friends}">
             <c:if test="${friend.status != false}">

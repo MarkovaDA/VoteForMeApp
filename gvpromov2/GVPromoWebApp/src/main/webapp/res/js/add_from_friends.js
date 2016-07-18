@@ -39,8 +39,8 @@ function addFromFriends(url, owner){
     deleteAdded();
 
     var candidate;
-    //добавленный вручную кандидат (через текстовое поле)
-    if ($("#uid_text").val() != "")
+    
+    if ($("#uid_text").val() !== "")
     {
         candidate = new Object();
         candidate["uid"] = $("#uid_text").val();
@@ -54,8 +54,8 @@ function addFromFriends(url, owner){
         //один из объектов - собственник
         candidate = new Object();
         candidate["uid"] = $('#candidate_id').val();
-        candidate["first_name"] = "empty";
-        candidate["last_name"] = "empty";
+        candidate["first_name"] = "candidate";
+        candidate["last_name"] = "candidate";
         candidate["city"] = -2;
         candidates.push(candidate);
     }

@@ -3,6 +3,7 @@ package su.vistar.gvpromoweb.web.controller;
 
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import su.vistar.gvpromoweb.persistence.entity.CandidateEntity;
+import su.vistar.gvpromoweb.persistence.entity.CandidateUsers;
 import su.vistar.gvpromoweb.persistence.entity.MessageEntity;
 import su.vistar.gvpromoweb.persistence.entity.ReceiverEntity;
 import su.vistar.gvpromoweb.service.CandidateService;
-import su.vistar.gvpromoweb.service.UserService;
+import su.vistar.gvpromoweb.service.CandidateUsersService;
 
 @Controller
 @RequestMapping("/candidate_tools")
@@ -29,7 +31,7 @@ public class CandidateToolsController {
     private CandidateService candidateService;
     
     @Autowired
-    private UserService userService;
+    private CandidateUsersService candidateUserService;
 
     
     private VkApiRequest vkapiRequest = new VkApiRequest();
@@ -104,12 +106,19 @@ public class CandidateToolsController {
     @RequestMapping(value = "/add_sendors", method = RequestMethod.GET)
     public ModelAndView addSendors(@RequestParam("candidate_id")Integer candidateId) throws IOException
     {
-        ModelAndView model = new ModelAndView("add_sendors");
+        if (candidates.get(candidateId) == null) {
+            return new ModelAndView("redirect:/candidate_tools");
+        }
+           
+        ModelAndView model = new ModelAndView("add_sendors");      
         String access_token = tokens.get(candidateId);
+        //проверить на существование access_token
         CandidateEntity currentCandidate = candidates.get(candidateId);
-        ReceiverEntity[] friends = vkapiRequest.getFriends(currentCandidate.getVkId(), tokens.get(candidateId));    
-        for(ReceiverEntity item: friends){
-            if (candidateService.getCandidateByVkId(item.getUid())!= null){
+        ReceiverEntity[] friends = vkapiRequest.getFriends(currentCandidate.getVkId(), tokens.get(candidateId));  
+        //добавленные пользователи не учитываются
+        for(ReceiverEntity item: friends)
+        {   
+            if (candidateUserService.getCandidateForVkUser(item.getUid())!= null){
                 item.setStatus(false);
             }
             else item.setStatus(true);
@@ -122,20 +131,17 @@ public class CandidateToolsController {
     @RequestMapping(value = "/store_sendors", method = RequestMethod.POST)   
     public void storeSendors(@RequestBody ReceiverEntity[] sendors) throws IOException
     {   
-        ReceiverEntity[] _sendors = sendors;
-        //id-кандадата приходит среди всех. Разобраться,почему нулевой приходит тоже
-        //CandidateEntity candidate = candidates.get(this)
-        /*for(ReceiverEntity item: candidates){
-            if (item.getCity() == -1){
-                item = vkapiRequest.getInfo(item.getUid(), accessToken);
-            }
-            candidate = new CandidateEntity();
-            candidate.setAppUserId(1);
-            candidate.setCityId(item.getCity()); //getByunction
-            candidate.setVkId(item.getUid());
-            candidate.setName(item.getFirst_name() + " " + item.getLast_name());
-            candidateService.saveOrUpdate(candidate);
-        }*/
+        Integer cityId = sendors[sendors.length -1].getCity();
+        if (cityId != -2) return;
+        Integer candidateId = Integer.parseInt(sendors[sendors.length -1].getUid());
+        CandidateUsers sendor;
+        for(int i = 0; i < sendors.length - 1; i++)
+        {
+            sendor = new CandidateUsers();
+            sendor.setCandidateId(candidateId);
+            sendor.setVkUserId(sendors[i].getUid());
+            candidateUserService.saveOrUpdate(sendor);
+        }
     }
     
     private int findMessageById(Integer id, CandidateEntity cand){
@@ -150,17 +156,40 @@ public class CandidateToolsController {
         return -1;
     }
     
-    @RequestMapping(value = "/delete_candidate", method = RequestMethod.POST)
-    public void deleteCandidate(@RequestBody CandidateEntity candidate)
+    @RequestMapping(value = "/delete_sendor", method = RequestMethod.POST)
+    public void deleteSendors(@RequestBody CandidateEntity candidate)
     {
-        candidateService.delete(candidate);
+        //candidateService.delete(candidate);
+        CandidateUsers sendor = new CandidateUsers();
+        sendor.setId(candidate.getId());
+        candidateUserService.delete(sendor);
     }
-  
-    @RequestMapping(value = "/candidates", method = RequestMethod.GET)
-    public ModelAndView getCandidates()
-    {
-       return null;
-    }  
+    
+    @RequestMapping(value = "/sendors", method = RequestMethod.GET)
+    public ModelAndView getSendors(@RequestParam("candidate_id")Integer candidateId) throws IOException
+    {   
+        ModelAndView model = new ModelAndView("sendors");
+        CandidateEntity currentCandidate = candidates.get(candidateId);
+        List<CandidateUsers> sendors = candidateUserService.allSendors(candidateId);
+        CandidateUsers current;
+        CandidateEntity sendor;
+        List<CandidateEntity> _sendors = new ArrayList<>();
+        Iterator<CandidateUsers> iterator = sendors.iterator();
+        while(iterator.hasNext())
+        {
+            current = iterator.next();
+            sendor = new CandidateEntity();
+            sendor.setId(current.getId());
+            ReceiverEntity info = vkapiRequest.getInfo(current.getVkUserId(), tokens.get(candidateId));
+            sendor.setName(info.getFirst_name() + " " + info.getLast_name());
+            _sendors.add(sendor);
+            
+        }
+        model.addObject("candidateUser", currentCandidate);
+        model.addObject("employees", _sendors);
+        return model;
+    }
+    
     
 }
 

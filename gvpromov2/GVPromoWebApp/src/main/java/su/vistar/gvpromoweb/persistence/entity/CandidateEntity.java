@@ -40,6 +40,8 @@ public class CandidateEntity implements Serializable{
     @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
     private List<MessageEntity> messages; //соответствующие кандидату сообщения
 
+    
+    
     public List<MessageEntity> getMessages() {
         return messages;
     }

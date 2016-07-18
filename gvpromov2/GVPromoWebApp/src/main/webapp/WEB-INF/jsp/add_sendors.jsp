@@ -32,19 +32,19 @@
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                       <i class="material-icons mdl-list__item-avatar">view_list</i>
-                      <a href="">Мои сообщения</a>
+                      <a id="my_messages">Мои сообщения</a>
                     </span>
                   </li>
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                       <i class="material-icons mdl-list__item-avatar">add</i>                      
-                      <a>Добавить отправителя</a>
+                      <a href="">Добавить пользователя</a>
                     </span>
                   </li>
                   <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                       <i class="material-icons mdl-list__item-avatar">remove</i>                      
-                      <a>Удалить отправителя</a>
+                      <a id="delete_sendors">Удалить пользователя</a>
                     </span>
                   </li>
                  </ul>
@@ -52,11 +52,11 @@
             
             <!--2 колонка-->    
             <div class="mdl-cell mdl-cell--10-col mdl-cell--3-col-phone mdl-cell--1-col-phone">
-                
-                 <jsp:include page="include/friends_list.jsp"/>
-                 <button class="mdl-button mdl-js-button mdl-button--raised">
-                    Добавить
-                 </button>
+                 <div class="mdl-textfield mdl-js-textfield" style="width:100% !important;">
+                    <input style="width:100%;" class="mdl-textfield__input" type="text" id="uid_text" placeholder="vk uid">
+                    <label class="mdl-textfield__label" for="uid_text"></label>
+                 </div>
+                 <jsp:include page="include/friends_list.jsp"/>               
             </div>
             </div>
       </div>
@@ -65,21 +65,22 @@
 <!--jquery-->
 <script src="<c:url value="/res/js/jquery.js"/>"></script>
 <script src="<c:url value="/res/js/add_from_friends.js"/>"></script>
+<script src="<c:url value="/res/js/search.js"/>"></script>
 <script>
      $(document).ready(function()
     {            
-        //обособить в отдельную функцию скрипта с передачей параметра сортировки
-        $('#search').keyup(function(){
-            var pattern = $(this).val();
-            
-            $('#friends_list li').each(function(index, value){
-                var name = $(this).find('.first_name').eq(0).html() + $(this).find('.last_name').eq(0).html();
-                if (name.indexOf(pattern) !== 0)
-                    $(this).hide();
-                else $(this).show();
-            });
-        });  
+        $('#my_messages').click(function(){
+              var location = window.location.href;
+              location = location.substring(0, location.indexOf('/add_sendors'));
+              window.location = location;              
+          });
+        $('#delete_sendors').click(function(){
+            var location = window.location.href;
+            location = location.substring(0, location.indexOf('/add_sendors'));
+            window.location = location + '/sendors?candidate_id='+$('#candidate_id').val();              
+        });
         addFromFriends("store_sendors", true);
+        search();
     });
 </script>
 </body>

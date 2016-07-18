@@ -49,58 +49,26 @@
             <!--2 колонка-->    
             <div class="mdl-cell mdl-cell--10-col mdl-cell--3-col-phone mdl-cell--1-col-phone">
                                 
-                <p class="header_text">Ваши кандидаты </p>
-                
-                <c:if test="${not empty candidates}">
-
-                    <ul class="demo-list-control mdl-list" id="candidates_list">
-			<c:forEach var="candidate" items="${candidates}">                            
-                            <li class="mdl-list__item">
-                                <span class="mdl-list__item-primary-content">
-                                    <i class="material-icons  mdl-list__item-avatar">person</i>
-                                    <span class="first_name">${candidate.name}</span> 
-                                </span>
-                                <span class="mdl-list__item-secondary-action">
-                                   <button class="mdl-button mdl-js-button mdl-button--raised" id="btn_add" candidate_id="${candidate.id}">
-                                    Удалить
-                                   </button>
-                                </span>
-                            </li>
-			</c:forEach>
-                            
-                    </ul>
-                 </c:if>
-                
-
+             <p class="header_text">Ваши кандидаты </p>                
+             <jsp:include page="include/employee_list.jsp"/>  
             </div>
             </div>
       </div>
   </main>
   <div>
   <script src="<c:url value="/res/js/jquery.js"/>"></script>
+  <script src="<c:url value="/res/js/delete_employee.js"/>"></script>
+  <script src="<c:url value="/res/js/search.js"/>"></script>
   <script>
       $(document).ready(function(){
+          search();
           $('#add_candidate').click(function(){
               var location = window.location.href;
-              location = location.substring(0, location.indexOf('/candidates'))
+              location = location.substring(0, location.indexOf('/candidates'));
               window.location = location;              
           });
-          var candidate;
-          $('button').click(function(){
-                candidate = new Object();
-                var index = parseInt($(this).attr('candidate_id'));        
-                candidate["id"] = index;
-                //передаём сущность на сервер для удаления
-                $.ajax({
-                    type : "POST",
-                    contentType : "application/json",
-                    url : "delete_candidate",
-                    data : JSON.stringify(candidate),
-                    dataType : 'json'                
-                });
-                $(this).parent().parent().fadeOut(200);
-          });
-      })
+          delete_emplyee("delete_candidate");         
+      });
   </script>
 
 

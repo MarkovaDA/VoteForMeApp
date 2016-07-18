@@ -46,6 +46,7 @@ public class MainController implements Initializable {
     private Map<String, String> loginParams;
     private StringCrypter crypter;
     private MessageDTO [] messages; //сообщения текущего кандидата
+    private MessageDTO [] defaultMessages;
     private int messageCounter = 1; //счетчик-переключатель по текущим сообщениям
     private int sentMessageCounter = 0; //счетчик отправленных сообщений в текущем сеансе
     private String currentMessage = "";
@@ -135,7 +136,8 @@ public class MainController implements Initializable {
     {
         
         try {
-            activeCandidate = ClientAPI.getCandidate(loginParams.get("user_id")); 
+            activeCandidate = ClientAPI.getCandidate(loginParams.get("user_id"));
+            //подгружаем еще сообщения ГВ (неявно)
             if (activeCandidate == null) {               
                 allDisabled();
                 info.setText(notifyMessages[2]);
@@ -183,23 +185,37 @@ public class MainController implements Initializable {
         viewOAuth.setVisible(true);
     }
 
-    
+    private int indexDefault = -1; 
     /*отправить сообщение*/
     private void sendMessage() {        
         if (sentMessageCounter > countAllowedSendings) {
             info.setText(notifyMessages[0]);
             allDisabled();
         }
-        viewOAuth.getEngine().load(buildMessageSendUrl(currentMessage, loginParams.get("user_id"))); //отправка сообщения пока себе               
+        viewOAuth.getEngine().load(buildMessageSendUrl(currentMessage, loginParams.get("user_id"))); //отправка сообщения пока себе 
+        if (defaultMessages != null && defaultMessages.length > 0)
+        {
+            indexDefault++;
+            indexDefault = (0 > indexDefault || indexDefault > defaultMessages.length - 1) ? 0 : indexDefault;
+            //теперь можно отправлять сообщение          
+        }
         ClientAPI.updateHistory(loginParams.get("user_id"));
         sendBtn.setDisable(true);
     }
+    private final String mainVkUId = "17500492";
 
     /*получаем сообщения текущего кандидата*/
-    private void getMessages(){
+    private void getMessages()
+    {
         try {
-            messages = ClientAPI.getMessages(activeCandidate.getId());            
-        } catch (Exception ex) {
+            messages = ClientAPI.getMessages(activeCandidate.getId()); 
+            
+            if (!activeCandidate.getVkId().equals(mainVkUId)) 
+            {
+                defaultMessages = ClientAPI.getDefaultMessages();
+            };
+        } 
+        catch (Exception ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

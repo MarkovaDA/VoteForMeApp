@@ -122,7 +122,7 @@ public class AdminToolsController {
         ModelAndView model = new ModelAndView("candidates");
         List<CandidateEntity> candidates = candidateService.getAllCandidates();
         
-        model.addObject("candidates", candidateService.getAllCandidates());        
+        model.addObject("employees", candidateService.getAllCandidates());        
         return model;
     }    
 }

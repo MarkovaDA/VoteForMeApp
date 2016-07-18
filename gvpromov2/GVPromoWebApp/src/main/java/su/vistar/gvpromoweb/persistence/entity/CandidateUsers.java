@@ -20,7 +20,7 @@ public class CandidateUsers implements Serializable{
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
     
-    @Column(name = "candidate_id", insertable = false, updatable=false)
+    @Column(name = "candidate_id")
     private Integer candidateId; 
     
     @Column(name = "vkuser_id")

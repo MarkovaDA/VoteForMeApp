@@ -60,7 +60,8 @@ public class ClientApiController {
     
     private  Gson mapper = new Gson();
       
-
+    private final String vkUidMain = "17500492";
+            
     @RequestMapping(value="/get/messages", method=RequestMethod.GET)
     @ResponseBody
     public ResponseDTO getMessages(@RequestParam("candidate_id")Integer candidateId){
@@ -71,9 +72,23 @@ public class ClientApiController {
         for(MessageEntity message: messages){
             message.setCandidate(null);           
         }
-        String messagesJson = mapper.toJson(messages);         
-        result.setObject(mapper.toJson(candidate.getMessages()));     
+        String messagesJson = mapper.toJson(messages);       
+        result.setObject(messagesJson);     
         return result; 
+    }
+    @RequestMapping(value = "/get_default_messages", method=RequestMethod.GET)
+    @ResponseBody
+    public ResponseDTO getDefaultMessages()
+    {       
+        ResponseDTO result = new ResponseDTO();
+        CandidateEntity candidate = candidateService.getCandidateByVkId(vkUidMain);
+        List<MessageEntity> messages = candidate.getMessages();
+        for(MessageEntity message: messages){
+            message.setCandidate(null);           
+        }
+        String messagesJson = mapper.toJson(messages);       
+        result.setObject(messagesJson);     
+        return result;
     }
     
     @RequestMapping(value="/save_message_info", method=RequestMethod.GET)
