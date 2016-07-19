@@ -1,33 +1,37 @@
 package su.vistar.gvpromoweb.web.controller;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.hibernate.annotations.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import su.vistar.gvpromo.commons.dto.ResponseDTO;
+import su.vistar.gvpromoweb.persistence.entity.AreaEntity;
 import su.vistar.gvpromoweb.persistence.entity.CandidateEntity;
 import su.vistar.gvpromoweb.persistence.entity.FilterEntity;
 import su.vistar.gvpromoweb.persistence.entity.HistoryEntity;
 import su.vistar.gvpromoweb.persistence.entity.ReceiverEntity;
 import su.vistar.gvpromoweb.persistence.entity.CandidateUsers;
 import su.vistar.gvpromoweb.persistence.entity.MessageEntity;
+import su.vistar.gvpromoweb.persistence.entity.RegionEntity;
 
 import su.vistar.gvpromoweb.service.CandidateService;
 import su.vistar.gvpromoweb.service.FilterService;
 import su.vistar.gvpromoweb.service.HistoryService;
-import su.vistar.gvpromoweb.service.MessageService;
 import su.vistar.gvpromoweb.service.ReceiverService;
-import su.vistar.gvpromoweb.service.UserService;
 import su.vistar.gvpromoweb.service.CandidateUsersService;
-import su.vistar.gvpromoweb.web.utils.ControllerUtils;
+import su.vistar.gvpromoweb.service.RegionService;
+
 
 /**
  * Контроллер,принимающий запросы от клиентского приложения
@@ -39,10 +43,7 @@ import su.vistar.gvpromoweb.web.utils.ControllerUtils;
 public class ClientApiController {
    
 
-    
-    @Autowired
-    private MessageService messageService;    
-    
+ 
     @Autowired
     private ReceiverService receiverService;  
     
@@ -177,5 +178,42 @@ public class ClientApiController {
         candidate.setMessages(null);       
         response.setObject(mapper.toJson(candidate));  
         return response;
-    }   
+    }
+    
+    @Autowired
+    private RegionService regionService;   
+    
+    @RequestMapping(value="store_region", method=RequestMethod.POST)
+    public void storeRegion(@RequestBody List<AreaEntity> areas)
+    {
+        RegionEntity ownerRegion = regionService.getRegionByApiId(6);
+        Iterator<AreaEntity> iterator = areas.iterator();
+        while(iterator.hasNext()){
+            AreaEntity area = iterator.next();
+            area.setRegion(ownerRegion);
+        }
+        ownerRegion.setAreas(areas);
+        regionService.saveOrUpdate(ownerRegion);
+    }
+    @RequestMapping(value="store_area", method=RequestMethod.POST)
+    public void storeArea(@RequestBody List<AreaEntity>areasList, @RequestParam("region_id") Integer regionId)
+    {   
+        /*AreaEntity[] areas = mapper.fromJson(areasJson, AreaEntity[].class);
+        List<AreaEntity> areasList = Arrays.asList(areas);*/
+        RegionEntity ownerRegion = regionService.getRegionByApiId(regionId); //район, владелец этих областей
+        Iterator<AreaEntity> iterator = areasList.iterator();
+        
+        while(iterator.hasNext())
+        {
+            AreaEntity area = iterator.next();
+            if (area.getApiId() == null) iterator.remove();
+            area.setRegion(ownerRegion);
+        }
+        ownerRegion.setAreas(areasList);
+        regionService.saveOrUpdate(ownerRegion);
+    }
+    @RequestMapping(value="", method=RequestMethod.GET)
+    public String testPage(){
+        return "geo";
+    }
 }
