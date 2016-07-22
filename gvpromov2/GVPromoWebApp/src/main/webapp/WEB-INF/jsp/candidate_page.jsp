@@ -52,7 +52,12 @@
             
             <!--2 колонка-->    
             <div class="mdl-cell mdl-cell--10-col mdl-cell--3-col-phone mdl-cell--1-col-phone"> 
+                
+                <button class="mdl-button mdl-js-button mdl-button--raised" id="create_message">
+                    Создать сообщение
+                </button>
                 <p class="header_text">Мои сообщения</p>
+                
                 <c:if test="${not empty messages}">
                     <c:forEach var="message" items="${messages}">
                         <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">

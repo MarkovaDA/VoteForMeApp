@@ -5,6 +5,7 @@
  */
 package su.vistar.gvpromoweb.persistence.entity;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.FetchMode;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
 
 @Entity
 @Table(name="area")
@@ -37,6 +43,18 @@ public class AreaEntity implements Serializable {
     public void setRegionId(Integer regionId) {
         this.regionId = regionId;
     }*/
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "area")
+    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+    private List<CityEntity> cities;  //все города района
+
+    public List<CityEntity> getCities() {
+        return cities;
+    }
+
+    public void setCities(List<CityEntity> cities) {
+        this.cities = cities;
+    }
+    
     
     @Column(name = "name")
     private String name;

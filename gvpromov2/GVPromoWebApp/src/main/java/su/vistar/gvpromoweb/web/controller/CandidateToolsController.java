@@ -2,7 +2,11 @@ package su.vistar.gvpromoweb.web.controller;
 
 
 import com.google.gson.Gson;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -52,7 +56,7 @@ public class CandidateToolsController {
             "authorize?" +
             "client_id=5546142" +
             "&redirect_uri=http://localhost:8084/GVPromoWebApp/candidate_tools/login"+
-            "&response_type=code";
+            "&response_type=code&scope=messages,offline";
     
     private String accessTokenUrl = "https://oauth.vk.com/access_token" +
             "?client_id=5546142" +
@@ -91,8 +95,8 @@ public class CandidateToolsController {
         
         return model;
     }
-   
-  
+    
+    
     @RequestMapping(value = "/update_message", method = RequestMethod.POST)
     public void updateMessage(@RequestParam("message")String newMessage,@RequestParam("candidate_id")Integer candidateId) 
     {   

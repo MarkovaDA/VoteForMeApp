@@ -22,14 +22,17 @@ import su.vistar.gvpromoweb.persistence.entity.FilterEntity;
 import su.vistar.gvpromoweb.persistence.entity.HistoryEntity;
 import su.vistar.gvpromoweb.persistence.entity.ReceiverEntity;
 import su.vistar.gvpromoweb.persistence.entity.CandidateUsers;
+import su.vistar.gvpromoweb.persistence.entity.CityEntity;
 import su.vistar.gvpromoweb.persistence.entity.MessageEntity;
 import su.vistar.gvpromoweb.persistence.entity.RegionEntity;
+import su.vistar.gvpromoweb.service.AreaService;
 
 import su.vistar.gvpromoweb.service.CandidateService;
 import su.vistar.gvpromoweb.service.FilterService;
 import su.vistar.gvpromoweb.service.HistoryService;
 import su.vistar.gvpromoweb.service.ReceiverService;
 import su.vistar.gvpromoweb.service.CandidateUsersService;
+import su.vistar.gvpromoweb.service.CityService;
 import su.vistar.gvpromoweb.service.RegionService;
 
 
@@ -183,6 +186,12 @@ public class ClientApiController {
     @Autowired
     private RegionService regionService;   
     
+    @Autowired
+    private CityService cityService; 
+    
+    @Autowired
+    private AreaService areaService; 
+    
     @RequestMapping(value="store_region", method=RequestMethod.POST)
     public void storeRegion(@RequestBody List<AreaEntity> areas)
     {
@@ -196,21 +205,18 @@ public class ClientApiController {
         regionService.saveOrUpdate(ownerRegion);
     }
     @RequestMapping(value="store_area", method=RequestMethod.POST)
-    public void storeArea(@RequestBody List<AreaEntity>areasList, @RequestParam("region_id") Integer regionId)
+    public void storeArea(@RequestBody List<CityEntity>cityList, @RequestParam("area_api_id")Integer area_api_id)
     {   
-        /*AreaEntity[] areas = mapper.fromJson(areasJson, AreaEntity[].class);
-        List<AreaEntity> areasList = Arrays.asList(areas);*/
-        RegionEntity ownerRegion = regionService.getRegionByApiId(regionId); //район, владелец этих областей
-        Iterator<AreaEntity> iterator = areasList.iterator();
+        AreaEntity ownerArea = areaService.getAreaByApiId(area_api_id); //получаем район
+        Iterator<CityEntity> iterator = cityList.iterator();
         
         while(iterator.hasNext())
         {
-            AreaEntity area = iterator.next();
-            if (area.getApiId() == null) iterator.remove();
-            area.setRegion(ownerRegion);
+            CityEntity city = iterator.next();
+            city.setArea(ownerArea);
         }
-        ownerRegion.setAreas(areasList);
-        regionService.saveOrUpdate(ownerRegion);
+        ownerArea.setCities(cityList);
+        areaService.saveOrUpdate(ownerArea);      
     }
     @RequestMapping(value="", method=RequestMethod.GET)
     public String testPage(){

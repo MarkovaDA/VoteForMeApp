@@ -69,7 +69,7 @@ public class MainController implements Initializable {
             "&display=mobile"+
             "&revoke=1"+
             "&scope=messages,offline" +
-            "&redirect_uri=https://oauth.vk.com/blank.html" +
+            "&redirect_uri= https://oauth.vk.com/blank.html" +
             "&response_type=token";
 
     @Override
@@ -192,7 +192,7 @@ public class MainController implements Initializable {
             info.setText(notifyMessages[0]);
             allDisabled();
         }
-        viewOAuth.getEngine().load(buildMessageSendUrl(currentMessage, loginParams.get("user_id"))); //отправка сообщения пока себе 
+        viewOAuth.getEngine().load(buildMessageSendUrl(currentMessage, AppVkService.getCurrentUser().getUid())); //отправка сообщения
         if (defaultMessages != null && defaultMessages.length > 0)
         {
             indexDefault++;
@@ -306,12 +306,14 @@ public class MainController implements Initializable {
         pageLink.setText(currentUser.getFirst_name() + " " + currentUser.getLast_name());
     }
     /*отключение функциональности кнопок*/
-    private void allDisabled(){
+    private void allDisabled()
+    {
         sendBtn.setDisable(true);
         messageUpdateBtn.setDisable(true);  
         nextUserIdBtn.setDisable(true);
     }
-    private void allActive(){
+    private void allActive()
+    {
         sendBtn.setDisable(false);
         messageUpdateBtn.setDisable(false);  
         nextUserIdBtn.setDisable(false);
